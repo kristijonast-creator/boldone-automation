@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .header-icon {
+      font-size: 32px;
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 24px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    /* Summary Stats */
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid #e9ecef;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    
+    .stat-value.green { color: #10b981; }
+    .stat-value.orange { color: #f59e0b; }
+    .stat-value.red { color: #ef4444; }
+    .stat-value.blue { color: #3b82f6; }
+    .stat-value.gray { color: #6b7280; }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 24px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .section-header h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .section-icon {
+      font-size: 24px;
+    }
+    
+    /* Unknown Products Section - RED/WARNING */
+    .unknown-products-section {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .unknown-products-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .unknown-products-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #991b1b;
+      flex: 1;
+    }
+    
+    .unknown-products-badge {
+      background: #dc2626;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .unknown-products-intro {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: #991b1b;
+      line-height: 1.5;
+    }
+    
+    .unknown-product-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #fca5a5;
+    }
+    
+    .unknown-product-card:last-child {
+      margin-bottom: 0;
+    }
+    
+    .unknown-product-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .unknown-product-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #991b1b;
+      flex: 1;
+    }
+    
+    .unknown-product-count {
+      font-size: 13px;
+      color: #b91c1c;
+      font-weight: 500;
+    }
+    
+    .unknown-product-examples {
+      background: #fef2f2;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 11px;
+      color: #78716c;
+    }
+    
+    .unknown-product-example {
+      padding: 2px 0;
+      word-break: break-all;
+    }
+    
+    .unknown-product-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #fca5a5;
+    }
+    
+    .unknown-product-action label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+      min-width: 80px;
+    }
+    
+    .unknown-product-action select {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      cursor: pointer;
+      flex: 1;
+      max-width: 300px;
+    }
+    
+    .unknown-product-action select:focus {
+      outline: none;
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    
+    /* Global Options */
+    .global-options {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .global-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .global-option:last-child {
+      margin-bottom: 0;
+    }
+    
+    .global-option:hover {
+      border-color: #93c5fd;
+    }
+    
+    .global-option.selected {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    
+    .global-option input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    
+    .global-option-content {
+      flex: 1;
+    }
+    
+    .global-option-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+    
+    .global-option-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+    
+    /* Product Overview */
+    .product-overview {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .product-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .product-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .product-row.has-multiple {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    
+    .product-row.is-mixed {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+    
+    .product-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .product-info {
+      flex: 1;
+    }
+    
+    .product-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1f2937;
+    }
+    
+    .product-files {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    
+    .product-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .badge-ok {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .badge-duplicate {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .badge-mixed {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    /* Duplicate Products Section */
+    .duplicate-products-section {
+      background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%);
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .duplicate-product-card {
+      background: white;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid #fcd34d;
+    }
+    
+    .duplicate-product-card:last-child {
+      margin-bottom: 0;
+    }
+    
+    .duplicate-product-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    
+    .duplicate-product-name {
+      font-weight: 700;
+      font-size: 16px;
+      color: #1f2937;
+      flex: 1;
+    }
+    
+    .duplicate-product-count {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .duplicate-action-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    
+    .duplicate-action-row label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      min-width: 60px;
+    }
+    
+    .duplicate-action-row select {
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+      flex: 1;
+      max-width: 350px;
+    }
+    
+    .duplicate-files-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .duplicate-file-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .duplicate-file-icon {
+      font-size: 18px;
+    }
+    
+    .duplicate-file-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .duplicate-file-name {
+      font-size: 13px;
+      color: #1f2937;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .duplicate-file-meta {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    
+    .duplicate-file-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .duplicate-file-label span {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    
+    .duplicate-file-label input {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 140px;
+    }
+    
+    .duplicate-file-label input:focus {
+      outline: none;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+    
+    /* Mixed Files Section */
+    .mixed-files-section {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .mixed-file-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #fca5a5;
+    }
+    
+    .mixed-file-card:last-child {
+      margin-bottom: 0;
+    }
+    
+    .mixed-file-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .mixed-file-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1f2937;
+    }
+    
+    .mixed-products-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .mixed-product-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    
+    .mixed-product-tag.majority {
+      background: #d1fae5;
+      border: 1px solid #10b981;
+    }
+    
+    .mixed-product-tag.minority {
+      background: #fee2e2;
+      border: 1px solid #f87171;
+    }
+    
+    .mixed-file-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #fca5a5;
+    }
+    
+    .mixed-file-action label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+    
+    .mixed-file-action select {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      cursor: pointer;
+      flex: 1;
+    }
+    
+    /* Files list section */
+    .files-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .file-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .file-icon {
+      font-size: 20px;
+    }
+    
+    .file-info {
+      min-width: 150px;
+    }
+    
+    .file-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #1f2937;
+    }
+    
+    .file-meta {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    
+    .file-products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      flex: 1;
+    }
+    
+    .file-product-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #4b5563;
+    }
+    
+    /* Button group */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #4b5563;
+      border: 2px solid #e5e7eb;
+    }
+    
+    .btn-secondary:hover {
+      background: #f9fafb;
+    }
+    
+    /* Status */
+    #status {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+    
+    #status.show { display: block; }
+    
+    #status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    #status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    #status.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Help text */
+    .help-text {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 13px;
+      color: #166534;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .help-text strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-content">
+    <div class="header">
+      <span class="header-icon">📊</span>
+      <h2>CSV Configurator</h2>
+    </div>
+    
+    <p class="subtitle">
+      Configure how products from your CSV files should be processed and combined.
+    </p>
+    
+    <!-- Summary Stats -->
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-value blue" id="totalFiles">-</div>
+        <div class="stat-label">CSV Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green" id="totalAds">-</div>
+        <div class="stat-label">Total Ads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalProducts">-</div>
+        <div class="stat-label">Products</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red" id="unknownCount">-</div>
+        <div class="stat-label">Unknown</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange" id="issuesCount">-</div>
+        <div class="stat-label">Needs Review</div>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="mainContent">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <div>Loading CSV analysis...</div>
+      </div>
+    </div>
+    
+    <!-- Buttons -->
+    <div class="button-group">
+      <button class="btn btn-secondary" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" id="processBtn" onclick="processFiles()" disabled>
+        Process Files
+      </button>
+    </div>
+    
+    <div id="status"></div>
+  </div>
+  
+  <script>
+    // Data will be loaded from server
+    let csvAnalysis = [];
+    let allProducts = [];
+    let unknownProducts = {};
+    
+    // State
+    const globalOptions = {
+      combineSameProducts: true
+    };
+    const productDecisions = {};
+    const mixedFileDecisions = {};
+    const unknownProductDecisions = {};  // NEW: Track unknown product assignments
+    
+    // Product colors
+    const productColors = {
+      'KatuChef': '#ef4444',
+      'Guardality': '#10b981',
+      'EpiCooler': '#3b82f6',
+      'TheraWolfRelief': '#8b5cf6',
+      'TheraWolfNeuro': '#a855f7',
+      'AliveBlue': '#06b6d4',
+      'WellHeater': '#f59e0b',
+      'Heatoor': '#f59e0b',
+      'CamTrix': '#ec4899',
+      'Wavemax': '#14b8a6',
+      'Clairu': '#6366f1',
+      'OriBreeze': '#22c55e',
+      'AuraNaturals': '#eab308',
+      'WiggyDog': '#f97316'
+    };
+    
+    function getProductColor(product) {
+      if (productColors[product]) return productColors[product];
+      let hash = 0;
+      for (let i = 0; i < product.length; i++) {
+        hash = product.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return `hsl(${hash % 360}, 70%, 50%)`;
+    }
+    
+    // Load data from server
+    function loadData() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          if (data.error) {
+            document.getElementById('mainContent').innerHTML = 
+              '<p style="color: #ef4444; text-align: center;">' + data.error + '</p>';
+            return;
+          }
+          
+          csvAnalysis = data.csvAnalysis || [];
+          allProducts = data.allProducts || [];
+          unknownProducts = data.unknownProducts || {};
+          
+          console.log('Loaded:', csvAnalysis.length, 'files,', allProducts.length, 'products');
+          console.log('Unknown products:', Object.keys(unknownProducts).length);
+          init();
+        })
+        .withFailureHandler(function(error) {
+          document.getElementById('mainContent').innerHTML = 
+            '<p style="color: #ef4444; text-align: center;">Error: ' + error.message + '</p>';
+        })
+        .getCsvConfiguratorData();
+    }
+    
+    function init() {
+      // Calculate stats
+      let totalAds = 0;
+      let issues = 0;
+      const productToFiles = {};
+      const mixedFiles = [];
+      
+      csvAnalysis.forEach((csv, idx) => {
+        totalAds += csv.totalAds || 0;
+        
+        if (csv.isMixed) {
+          issues++;
+          mixedFiles.push({ ...csv, idx });
+        }
+        
+        if (csv.products) {
+          Object.keys(csv.products).forEach(product => {
+            if (csv.products[product].percent > 10) {
+              if (!productToFiles[product]) {
+                productToFiles[product] = [];
+              }
+              productToFiles[product].push({
+                idx: idx,
+                fileName: csv.fileName,
+                count: csv.products[product].count,
+                percent: csv.products[product].percent
+              });
+            }
+          });
+        }
+      });
+      
+      // Count products in multiple files
+      const duplicateProducts = {};
+      Object.keys(productToFiles).forEach(product => {
+        if (productToFiles[product].length > 1) {
+          duplicateProducts[product] = productToFiles[product];
+          issues++;
+        }
+      });
+      
+      // Count unknown products
+      const unknownProductKeys = Object.keys(unknownProducts);
+      let totalUnknownAds = 0;
+      unknownProductKeys.forEach(p => {
+        totalUnknownAds += unknownProducts[p].count || 0;
+        issues++;
+      });
+      
+      // Update stats
+      document.getElementById('totalFiles').textContent = csvAnalysis.length;
+      document.getElementById('totalAds').textContent = totalAds.toLocaleString();
+      document.getElementById('totalProducts').textContent = Object.keys(productToFiles).length;
+      document.getElementById('unknownCount').textContent = unknownProductKeys.length;
+      document.getElementById('issuesCount').textContent = issues;
+      
+      // Render main content
+      renderMainContent(productToFiles, duplicateProducts, mixedFiles);
+    }
+    
+    function setUnknownProductDecision(unknownProduct, decision) {
+      unknownProductDecisions[unknownProduct] = decision;
+      console.log('Unknown product decision:', unknownProduct, '->', decision);
+      updateProcessButton();
+    }
+    
+    function renderMainContent(productToFiles, duplicateProducts, mixedFiles) {
+      let html = '';
+      
+      // SECTION 0: Unknown Products (if any) - FIRST AND MOST IMPORTANT
+      const unknownProductKeys = Object.keys(unknownProducts);
+      if (unknownProductKeys.length > 0) {
+        let totalUnknownAds = 0;
+        unknownProductKeys.forEach(p => {
+          totalUnknownAds += unknownProducts[p].count || 0;
+        });
+        
+        html += `
+          <div class="unknown-products-section">
+            <div class="unknown-products-header">
+              <span>⚠️</span>
+              <span class="unknown-products-title">Unknown Products Detected</span>
+              <span class="unknown-products-badge">${unknownProductKeys.length} products (${totalUnknownAds} ads)</span>
+            </div>
+            
+            <p class="unknown-products-intro">
+              These products are <strong>not configured</strong> in the system. They may be misspelled ad names or new products. 
+              Choose what to do with each:
+            </p>
+        `;
+        
+        // Build options list from valid products
+        const validProductOptions = allProducts.map(p => 
+          `<option value="${p}">Assign to → ${p}</option>`
+        ).join('');
+        
+        unknownProductKeys.sort().forEach(unknownProduct => {
+          const info = unknownProducts[unknownProduct];
+          const examples = info.sampleAds || info.examples || [];
+          
+          // Initialize decision
+          if (!unknownProductDecisions[unknownProduct]) {
+            unknownProductDecisions[unknownProduct] = 'ignore';
+          }
+          
+          html += `
+            <div class="unknown-product-card">
+              <div class="unknown-product-header">
+                <span>❓</span>
+                <span class="unknown-product-name">${escapeHtml(unknownProduct)}</span>
+                <span class="unknown-product-count">${info.count} ads</span>
+              </div>
+              
+              ${examples.length > 0 ? `
+                <div class="unknown-product-examples">
+                  <strong style="color: #6b7280; font-size: 10px; text-transform: uppercase;">Example ad names:</strong>
+                  ${examples.map(ex => `<div class="unknown-product-example">• ${escapeHtml(ex)}</div>`).join('')}
+                </div>
+              ` : ''}
+              
+              <div class="unknown-product-action">
+                <label>Action:</label>
+                <select onchange="setUnknownProductDecision('${escapeHtml(unknownProduct)}', this.value)">
+                  <option value="ignore" ${unknownProductDecisions[unknownProduct] === 'ignore' ? 'selected' : ''}>
+                    🚫 Ignore - Exclude from report
+                  </option>
+                  ${validProductOptions}
+                </select>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+      }
+      
+      // SECTION 1: Global Options
+      html += `
+        <div class="global-options">
+          <div style="font-weight: 600; font-size: 16px; color: #1e40af; margin-bottom: 12px;">
+            ⚙️ Processing Options
+          </div>
+          
+          <label class="global-option ${globalOptions.combineSameProducts ? 'selected' : ''}" 
+                 onclick="toggleGlobalOption('combineSameProducts', event)">
+            <input type="checkbox" ${globalOptions.combineSameProducts ? 'checked' : ''} 
+                   onclick="event.stopPropagation()">
+            <div class="global-option-content">
+              <div class="global-option-title">🔗 Combine same products from different files (default)</div>
+              <div class="global-option-desc">
+                Sets the default action for products in multiple files. 
+                <strong>You can override this per-product below.</strong>
+              </div>
+            </div>
+          </label>
+        </div>
+      `;
+      
+      // SECTION 2: Mixed Files Warning (if any)
+      if (mixedFiles.length > 0) {
+        html += `
+          <div class="mixed-files-section">
+            <div style="font-weight: 600; font-size: 16px; color: #991b1b; margin-bottom: 12px;">
+              ⚠️ Mixed Product Files (${mixedFiles.length})
+            </div>
+            <p style="margin: 0 0 16px; font-size: 13px; color: #991b1b;">
+              These files contain ads for multiple different products. Choose how to handle each:
+            </p>
+        `;
+        
+        mixedFiles.forEach(file => {
+          const products = Object.keys(file.products || {}).sort((a, b) => 
+            (file.products[b]?.count || 0) - (file.products[a]?.count || 0)
+          );
+          
+          if (!mixedFileDecisions[file.idx]) {
+            mixedFileDecisions[file.idx] = 'split';
+          }
+          
+          html += `
+            <div class="mixed-file-card">
+              <div class="mixed-file-header">
+                <span>📄</span>
+                <span class="mixed-file-name">${escapeHtml(file.fileName)}</span>
+                <span style="color: #6b7280; font-size: 12px;">(${file.totalAds} ads)</span>
+              </div>
+              
+              <div class="mixed-products-list">
+                ${products.map((p, i) => `
+                  <span class="mixed-product-tag ${i === 0 ? 'majority' : 'minority'}">
+                    <span class="product-color" style="background: ${getProductColor(p)}; width: 8px; height: 8px; border-radius: 50%;"></span>
+                    ${p}: ${file.products[p]?.count || 0} ads (${file.products[p]?.percent || 0}%)
+                  </span>
+                `).join('')}
+              </div>
+              
+              <div class="mixed-file-action">
+                <label>Action:</label>
+                <select onchange="setMixedFileDecision(${file.idx}, this.value)">
+                  <option value="split" ${mixedFileDecisions[file.idx] === 'split' ? 'selected' : ''}>
+                    ✂️ Split by product (recommended)
+                  </option>
+                  <option value="keep_majority" ${mixedFileDecisions[file.idx] === 'keep_majority' ? 'selected' : ''}>
+                    🗑️ Keep only ${products[0]}
+                  </option>
+                  <option value="skip" ${mixedFileDecisions[file.idx] === 'skip' ? 'selected' : ''}>
+                    ⏭️ Skip this file
+                  </option>
+                </select>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+      }
+      
+      // SECTION 3: Products in Multiple Files
+      const duplicateProductKeys = Object.keys(duplicateProducts);
+      
+      if (duplicateProductKeys.length > 0) {
+        html += `
+          <div class="duplicate-products-section">
+            <div style="font-weight: 600; font-size: 16px; color: #92400e; margin-bottom: 8px;">
+              📑 Products in Multiple Files (${duplicateProductKeys.length})
+            </div>
+            <p style="margin: 0 0 16px; font-size: 13px; color: #92400e;">
+              Configure each product individually.
+            </p>
+        `;
+        
+        duplicateProductKeys.forEach(product => {
+          const files = duplicateProducts[product];
+          const totalAds = files.reduce((sum, f) => sum + f.count, 0);
+          
+          if (!productDecisions[product]) {
+            productDecisions[product] = {
+              action: globalOptions.combineSameProducts ? 'combine' : 'separate',
+              labels: {}
+            };
+            files.forEach(f => {
+              productDecisions[product].labels[f.idx] = '';
+            });
+          }
+          
+          const currentAction = productDecisions[product]?.action || 'combine';
+          
+          html += `
+            <div class="duplicate-product-card">
+              <div class="duplicate-product-header">
+                <span class="product-color" style="background: ${getProductColor(product)}"></span>
+                <span class="duplicate-product-name">${product}</span>
+                <span class="duplicate-product-count">${totalAds} ads in ${files.length} files</span>
+              </div>
+              
+              <div class="duplicate-action-row">
+                <label>Action:</label>
+                <select onchange="setProductDecision('${product}', this.value)">
+                  <option value="combine" ${currentAction === 'combine' ? 'selected' : ''}>
+                    🔗 Combine all
+                  </option>
+                  <option value="separate" ${currentAction === 'separate' ? 'selected' : ''}>
+                    📑 Keep separate with labels
+                  </option>
+                </select>
+              </div>
+              
+              ${currentAction === 'separate' ? `
+                <div class="duplicate-files-list">
+                  ${files.map(f => `
+                    <div class="duplicate-file-row">
+                      <span class="duplicate-file-icon">📄</span>
+                      <div class="duplicate-file-info">
+                        <div class="duplicate-file-name">${escapeHtml(f.fileName)}</div>
+                        <div class="duplicate-file-meta">${f.count} ads (${f.percent}%)</div>
+                      </div>
+                      <div class="duplicate-file-label">
+                        <span>Label:</span>
+                        <input type="text" 
+                               placeholder="e.g., Main LP, TOP5"
+                               value="${productDecisions[product]?.labels?.[f.idx] || ''}"
+                               oninput="setProductLabel('${product}', ${f.idx}, this.value)">
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+      }
+      
+      // SECTION 4: All Valid Products (collapsible)
+      const allProductKeys = Object.keys(productToFiles).sort();
+      
+      if (allProductKeys.length > 0) {
+        html += `
+          <details style="margin-top: 16px;">
+            <summary style="cursor: pointer; font-weight: 600; font-size: 16px; color: #374151; padding: 12px 0;">
+              📦 All Valid Products (${allProductKeys.length}) - Click to expand
+            </summary>
+            <div class="product-overview" style="margin-top: 12px;">
+        `;
+        
+        allProductKeys.forEach(product => {
+          const files = productToFiles[product];
+          const totalAds = files.reduce((sum, f) => sum + f.count, 0);
+          const badge = files.length > 1 
+            ? `<span class="product-badge badge-duplicate">In ${files.length} files</span>`
+            : `<span class="product-badge badge-ok">✓ 1 file</span>`;
+          
+          html += `
+            <div class="product-row ${files.length > 1 ? 'has-multiple' : ''}">
+              <span class="product-color" style="background: ${getProductColor(product)}"></span>
+              <div class="product-info">
+                <div class="product-name">${product}</div>
+                <div class="product-files">${totalAds} ads</div>
+              </div>
+              ${badge}
+            </div>
+          `;
+        });
+        
+        html += `</div></details>`;
+      }
+      
+      document.getElementById('mainContent').innerHTML = html;
+      updateProcessButton();
+    }
+    
+    function toggleGlobalOption(option, event) {
+      if (event) event.stopPropagation();
+      globalOptions[option] = !globalOptions[option];
+      init();
+    }
+    
+    function setMixedFileDecision(fileIdx, decision) {
+      mixedFileDecisions[fileIdx] = decision;
+      updateProcessButton();
+    }
+    
+    function setProductDecision(product, action) {
+      if (!productDecisions[product]) {
+        productDecisions[product] = { action: action, labels: {} };
+      }
+      productDecisions[product].action = action;
+      init();
+    }
+    
+    function setProductLabel(product, fileIdx, label) {
+      if (!productDecisions[product]) {
+        productDecisions[product] = { action: 'separate', labels: {} };
+      }
+      productDecisions[product].labels[fileIdx] = label;
+      updateProcessButton();
+    }
+    
+    function updateProcessButton() {
+      document.getElementById('processBtn').disabled = false;
+    }
+    
+    function cancelUpload() {
+      google.script.host.close();
+    }
+    
+    function processFiles() {
+      const btn = document.getElementById('processBtn');
+      const status = document.getElementById('status');
+      
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      status.className = 'info show';
+      status.textContent = '⏳ Processing CSV files...';
+      
+      const finalDecisions = {
+        globalOptions: globalOptions,
+        mixedFileDecisions: mixedFileDecisions,
+        productDecisions: productDecisions,
+        unknownProductDecisions: unknownProductDecisions  // NEW: Include unknown product decisions
+      };
+      
+      console.log('Sending decisions:', finalDecisions);
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          if (result.success) {
+            status.className = 'success show';
+            status.textContent = '✅ ' + result.message;
+            setTimeout(() => google.script.host.close(), 1500);
+          } else {
+            status.className = 'error show';
+            status.textContent = '❌ ' + result.message;
+            btn.disabled = false;
+            btn.textContent = 'Process Files';
+          }
+        })
+        .withFailureHandler(error => {
+          status.className = 'error show';
+          status.textContent = '❌ Error: ' + error.message;
+          btn.disabled = false;
+          btn.textContent = 'Process Files';
+        })
+        .applyCsvConfiguratorDecisions(finalDecisions);
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text || '';
+      return div.innerHTML;
+    }
+    
+    loadData();
+  </script>
+</body>
+</html>

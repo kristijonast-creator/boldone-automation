@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .icon {
+      font-size: 32px;
+    }
+    
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #1a1a1a;
+    }
+    
+    .description {
+      color: #666;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    
+    .product-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .product-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .product-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    .file-count {
+      background: #ff6b35;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .csv-list {
+      margin-bottom: 20px;
+    }
+    
+    .csv-item {
+      background: white;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #ddd;
+    }
+    
+    .csv-icon {
+      font-size: 20px;
+    }
+    
+    .csv-name {
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+    
+    .input-group {
+      margin-bottom: 12px;
+    }
+    
+    .input-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+    }
+    
+    .label-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      transition: border-color 0.2s;
+    }
+    
+    .label-input:focus {
+      outline: none;
+      border-color: #ff6b35;
+    }
+    
+    .helper-text {
+      font-size: 12px;
+      color: #888;
+      margin-top: 6px;
+    }
+    
+    .example-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    
+    .example-pill {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid #bbdefb;
+      transition: all 0.2s;
+    }
+    
+    .example-pill:hover {
+      background: #bbdefb;
+      transform: translateY(-1px);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #666;
+      border: 2px solid #ddd;
+    }
+    
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+    
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+    }
+    
+    .warning-title {
+      font-weight: 600;
+      color: #856404;
+      margin-bottom: 8px;
+    }
+    
+    .warning-text {
+      color: #856404;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-content">
+    <div class="header">
+      <span class="icon">⚠️</span>
+      <h2>Duplicate Products Detected</h2>
+    </div>
+    
+    <div class="description">
+      Multiple CSV files contain ads for the same product(s). To keep data separate and organized, please provide labels to differentiate them (e.g., "Main LP", "TOP5", "Account A").
+    </div>
+    
+    <div class="warning-box">
+      <div class="warning-title">Important</div>
+      <div class="warning-text">
+        Data from different CSV files will be kept separate throughout the entire analysis and reporting process. Each will be tracked and reported independently.
+      </div>
+    </div>
+    
+    <!-- DEBUG: Show raw data -->
+    <div id="debugInfo" style="background: #f0f0f0; padding: 10px; margin: 10px 0; font-size: 12px; font-family: monospace;"></div>
+    
+    <div id="productSections"></div>
+    
+    <div class="button-group">
+      <button class="btn btn-secondary" onclick="cancelDifferentiation()">
+        Cancel Upload
+      </button>
+      <button class="btn btn-primary" id="confirmBtn" onclick="confirmDifferentiation()">
+        Continue with Labels
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Parse the server data
+    var duplicateDataRaw = '<?= JSON.stringify(duplicateInfo) ?>';
+    document.getElementById('debugInfo').textContent = 'Raw data: ' + duplicateDataRaw;
+    
+    var duplicateData;
+    try {
+      duplicateData = JSON.parse(duplicateDataRaw);
+      document.getElementById('debugInfo').textContent += '\n\nParsed successfully: ' + JSON.stringify(duplicateData, null, 2);
+    } catch (e) {
+      document.getElementById('debugInfo').textContent += '\n\nParse error: ' + e.toString();
+      duplicateData = {};
+    }
+    
+    const labels = {};
+    
+    function renderProducts() {
+      const container = document.getElementById('productSections');
+      
+      if (!duplicateData || Object.keys(duplicateData).length === 0) {
+        container.innerHTML = '<p style="color: red;">Error: No duplicate products data</p>';
+        return;
+      }
+      
+      Object.keys(duplicateData).forEach(product => {
+        const files = duplicateData[product];
+        const section = document.createElement('div');
+        section.className = 'product-section';
+        
+        let html = '<div class="product-header"><span class="product-name">' + product + '</span><span class="file-count">' + files.length + ' CSV files</span></div><div class="csv-list">';
+        
+        files.forEach(function(file, idx) {
+          html += '<div class="csv-item"><span class="csv-icon">📄</span><span class="csv-name">' + file.filename + '</span></div>';
+          html += '<div class="input-group"><div class="input-label"><span>🏷️</span><span>Label for this CSV file:</span></div>';
+          html += '<input type="text" class="label-input" id="label_' + product + '_' + idx + '" placeholder="e.g., Main LP, TOP5" data-product="' + product + '" data-fileidx="' + idx + '">';
+          html += '<div class="helper-text">Will show as "' + product + ' (Your Label)"</div></div>';
+        });
+        
+        html += '</div>';
+        section.innerHTML = html;
+        container.appendChild(section);
+        
+        labels[product] = new Array(files.length).fill('');
+        
+        files.forEach(function(file, idx) {
+          var input = document.getElementById('label_' + product + '_' + idx);
+          if (input) {
+            input.addEventListener('input', function() {
+              labels[product][idx] = this.value.trim();
+              checkFormValidity();
+            });
+          }
+        });
+      });
+      
+      checkFormValidity();
+    }
+    
+    function checkFormValidity() {
+      var allFilled = Object.keys(duplicateData).every(function(product) {
+        return labels[product] && labels[product].every(function(label) {
+          return label && label.trim() !== '';
+        });
+      });
+      document.getElementById('confirmBtn').disabled = !allFilled;
+    }
+    
+function confirmDifferentiation() {
+  var labelCount = 0;
+  Object.keys(labels).forEach(function(product) {
+    labelCount += labels[product].filter(function(l) { return l && l.trim() !== ''; }).length;
+  });
+  
+  if (labelCount === 0) {
+    alert('No labels entered! Please fill in labels.\n\nCurrent: ' + JSON.stringify(labels));
+    return;
+  }
+  
+  // ✅ Grey out button
+  var btn = document.getElementById('confirmBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  btn.style.background = '#cccccc';
+  btn.style.cursor = 'not-allowed';
+  
+  google.script.run
+    .withSuccessHandler(function() { 
+      google.script.host.close(); 
+    })
+    .withFailureHandler(function(e) { 
+      alert('Error: ' + e);
+      // Re-enable on error
+      btn.disabled = false;
+      btn.textContent = 'Continue with Labels';
+      btn.style.background = 'linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%)';
+      btn.style.cursor = 'pointer';
+    })
+    .applyProductLabels(labels);
+}
+    
+    function cancelDifferentiation() {
+      google.script.host.close();
+    }
+    
+    renderProducts();
+  </script>
+</body>
+</html>
